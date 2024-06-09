@@ -161,21 +161,14 @@ BOM</a></li>
 </div>
 
 <h1 id="challenges">Challenges and Solution</h1>
-<p>The most significant challenges we faced were due to the Ultrasonic Sensor and sending signals between CC3200 and Arduino Uno</p>
+<p>The most significant challenges we faced were due to the Ultrasonic Sensor and sending signals between CC3200 and Arduino Uno.</p>
 <h2 id="ultrasonic-sensor">Ultrasonic Sensor</h2>
-<div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
-  <div style='display: inline-block; vertical-align: top;flex:1 0 400px'>
-  <p>Initially, we incorporated an ultrasonic sensor into our project to detect people entering or exiting. We activated the sensor by sending a pulse to trigger it and then captured the echo response. To measure the duration of the echo pulse, we utilized the systick timer. Unfortunately, our measurement function didn't perform as accurately as expected. Due to time constraints, we had to shelve this feature for future improvement.</p>
-  <div>
-</div>
-  <h2 id="sending-signals-between-CC3200-and-Arduino-Uno">Sending Signals between CC3200 and Arduino Uno</h2>
-<div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
-  <div style='display: inline-block; vertical-align: top;flex:1 0 400px'>
-  <p>For communication between the two boards, we initially attempted to use two specific pins on the CC3200. However, these pins didn't behave as anticipated. After numerous attempts, we discovered that only certain pins met our requirements, and the ones initially chosen didn't work. Eventually, we settled on using pins 15 and 60 on the Launchpad for sending and receiving signals.</p>
-  <div>
-</div>
-  <h1 id="future-work">Future Work</h1>
-  <p>Given more time, we would work on adding several new functions to enhance our system. We aim to implement a feature that detects whether a person is entering or exiting and sends this information to AWS. Additionally, we would incorporate a 'STOP' button to halt the door in emergency situations and an automatic stop mechanism to prevent the door from closing if an object is detected in its path.</p>
+<p>Initially, we incorporated an ultrasonic sensor into our project to detect people entering or exiting. We activated the sensor by sending a pulse to trigger it and then captured the echo response. To measure the duration of the echo pulse, we utilized the systick timer. Unfortunately, our measurement function didn't perform as accurately as expected. Due to time constraints, we had to shelve this feature for future improvement.</p>
+<h2 id="sending-signals-between-CC3200-and-Arduino-Uno">Sending Signals between CC3200 and Arduino Uno</h2>
+<p>For communication between the two boards, we initially attempted to use two specific pins on the CC3200. However, these pins didn't behave as anticipated. After numerous attempts, we discovered that only certain pins met our requirements, and the ones initially chosen didn't work. Eventually, we settled on using pins 15 and 60 on the Launchpad for sending and receiving signals.</p>
+
+<h1 id="future-work">Future Work</h1>
+<p>Given more time, we would work on adding several new functions to enhance our system. We aim to implement a feature that detects whether a person is entering or exiting and sends this information to AWS. Additionally, we would incorporate a 'STOP' button to halt the door in emergency situations and an automatic stop mechanism to prevent the door from closing if an object is detected in its path.</p>
 <h1 id="finalized-bom">Finalized BOM</h1>
 <!-- you can convert google sheet cells to html for free using a converter
   like https://tabletomarkdown.com/convert-spreadsheet-to-html/ -->
