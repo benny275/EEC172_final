@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Minh Pham and Jade Nguyen (website template by Ryan Tsang)" />
+  <title>Screaming Balls</title>
+  <!-- <link rel="stylesheet" type="text/css" href="assets/github-markdown-light.css" /> -->
+  <link rel="stylesheet" href="assets/github-markdown-light.css" />
+  <link rel="stylesheet" href="assets/style-customization.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Automatic Garage Door Opener</h1>
+<p class="author"><strong>Minh Pham and Jade Nguyen</strong>
+(website template by Ryan Tsang)</p>
+<p class="date"><em>EEC172 SQ24</em></p>
+<div class="abstract">
+<div class="abstract-title"><h2>Description</h2>
+The Automatic Garage Door Opener is a sophisticated project utilizing the TI Launchpad CC3200 for Wi-Fi connectivity 
+and processes signals from the IR receiver, and the Arduino Uno R3 to control the stepper motor for precise door movement. 
+Operated via a AT&T IR remote control and an IR receiver circuit, the system features an OLED display for welcome messages 
+and door status updates. Integrated with AWS, it sends real-time notifications to the homeowner's phone, ensuring convenience and security.
+<br/><br/> Our source code can be
+found <!-- replace this link -->
+<a href="https://github.com/benny275/EEC172_final">here</a> in a separate github repository
+<h2>Video Demo</h2> 
+<p>Our project video demo showcases the seamless functionality of our garage door automation system. Upon pressing a button, the garage door smoothly pulls down, signaling its closure, while simultaneously displaying a message on the OLED screen to indicate that the door is closed. Another button press initiates the door's upward movement, effortlessly opening it. Furthermore, our system sends a signal to AWS upon completion of each action, ensuring real-time updates. Subsequently, users receive notifications on their phones, providing them with the current state of the door for enhanced convenience and peace of mind.</p>
+<center>
+<h3>Video Demonstration</h3><div style="text-align:center;margin:auto;max-width:560px"> <div style="padding-bottom:56.25%;position:relative;height:0;"> <iframe style="left:0;top:0;width:100%;height:100%;position:absolute;" width="560" height="315" src="https://www.youtube.com/shorts/p3GmpfW813Q" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div> </div> 
+</center> 
+</div>
+</header>
+<nav id="TOC" role="doc-toc">
+<h2 id="toc-title">Table of Contents</h2>
+<ul>
+<li><a href="#market-survey" id="toc-market-survey">Market
+Survey</a></li>
+<li><a href="#design" id="toc-design">Design</a>
+<ul>
+<li><a href="#functional-specification" id="toc-functional-specification">Functional Specification</a></li>
+<li><a href="#system-architecture"
+id="toc-ystem-architecture">System Architecture</a></li>
+</ul></li>
+<li><a href="#implementation" id="toc-implementation">Implementation</a>
+<ul>
+<li><a href="#software-implementation"
+id="toc-software-implementation">Software Implementation
+<ul>
+<li><a href="#IR-remote-control-and-signal-processing" id="toc-IR-remote-control-and-signal-processing">IR Remote Control and Signal Processing</a></li>
+<li><a href="#oled-display" id="toc-oled-display">OLED Display</a></li>
+<li><a href="#stepper-motor" id="toc-stepper-motor">Stepper Motor</a></li>
+<li><a href="#AWS-and-RESTful-API" id="toc-AWS-and-RESTful-API">AWS and RESTful API</a></li>
+</ul></li>
+<li><a href="#hardware-implementation"
+id="toc-hardware-implementation">Hardware Implementation</a>
+</ul>
+<li><a href="#challenges" id="toc-challenges">Challenges and Solution</a>
+<ul>
+<li><a href="#ultrasonic-sensor" id="toc-ultrasonic-sensor">Ultrasonic Sensor</a></li>
+<li><a href="#sending-signals-between-CC3200-and-Arduino-Uno" id="toc-sending-signals-between-CC3200-and-Arduino-Uno">Sending Signals between CC3200 and Arduino Uno</a></li>
+</ul></li>
+<li><a href="#future-work" id="toc-future-work">Future Work</a></li>
+<li><a href="#finalized-bom" id="toc-finalized-bom">Finalized
+BOM</a></li>
+</ul>
+</nav>
+<!-- EDIT METADATA ABOVE FOR CONTENTS TO APPEAR ABOVE THE TABLE OF CONTENTS -->
+
+<!-- ALL CONTENT THAT FOLLWOWS WILL APPEAR IN AND AFTER THE TABLE OF CONTENTS -->
+
+<h1 id="market-survey">Market Survey</h1>
+<p>The smart home technology market is witnessing robust growth, with garage door automation emerging as a key area of interest for homeowners 
+  seeking enhanced convenience and security. However, many existing solutions on the market are complex, feature-laden, and often come with high 
+  price tags. These systems integrate advanced functionalities such as remote control, voice command integration, and real-time alerts, which may 
+  be more than what an average user needs or wants to pay for. </p>
+
+<p>Our project focuses on providing a straightforward, affordable solution for garage door automation. Our system simplifies the user experience 
+  by enabling basic functionalities: opening and closing the garage door, displaying status messages on an OLED screen, and sending these status 
+  updates to an AWS server. By focusing on essential features, our system remains cost-effective and easy to install, making it an attractive option 
+  for homeowners who desire reliable and simple garage door automation without the complexity and expense of more advanced systems. This targeted 
+  approach ensures that our product meets the basic needs of the market while remaining accessible to a broader audience.
+</p></p>
+
+<h1 id="design">Design</h1>
+<h2 id="functional-specification">Functional Specification</h2>
+<img src="./media/Picture1.png" style="width:100%;height:auto"/>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-evenly;">
+  <div style="display:inline-block;vertical-align:top;flex:1 0 400px;">
+    Like a regular garage door opener, the user pushes the button on the remote to open the door. Upon pressing the button, the OLED displays 
+    a welcome message such as "Welcome home, Jade." When the button is pressed again after the door is fully open, the door begins to close. 
+    Once closed, the OLED displays "Door is closed," and a message such as "Door was open and closed at 6:00 PM" is sent to the homeowner's phone.
+  </div>
+</div>
+
+<br/><br/>
+
+<h2 id="system-architecture">System Architecture</h2>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-evenly;">
+  <div style="display:inline-block;vertical-align:top;flex:1 0 300px;">
+    <p>When the user push the button on the IR remote to open the door, the remote sends a signal to the IR receiver circuit connected to the 
+      TI Launchpad CC3200. This controller simultaneously triggers the OLED to display a welcome message and sends a signal to the Arduino board 
+      to activate the stepper motor, opening the door. When you push the button again after the door is fully opened, the CC3200 sends a signal 
+      to the Arduino to operate the motor in the opposite direction, closing the door. Once the door is completely closed, the Arduino sends a 
+      signal to the CC3200, which then updates the door status on the OLED and sends a notification to the homeowner.</p>
+  </div>
+  <div style="display:inline-block;vertical-align:top;flex:0 0 500px">
+    <div class="fig">
+      <img src="./media/Picture2.png" style="width:100%;height:auto;display:block">
+      <span class="caption">Data Flow</span>
+    </div>
+  </div>
+</div>
+
+<h1 id="implementation">Implementation</h1>
+<h2 id="software-implementation">Software Implementation</h2>
+<h3 id="IR-remote-control-and-signal-processing">IR Remote Control and Signal Processing</h3>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
+  <div style='display: inline-block; vertical-align: top;flex:1 0 200px'>
+    <p>In this section, we utilized our findings from Lab 3, where we analyzed IR transmission using a Saleae USB Logic Analyzer, decoded the data, and integrated it into our project. Although the system originally required only one button for door operation, we expanded functionality by incorporating multiple buttons for different users. This enhancement enables the system to identify users based on their input data, comparing it with each user's unique data.</p>
+    <p>The SysTick timer, operating at a clock frequency of 80 MHz, is essential for measuring pulse lengths received from the IR receiver. It employs various functions such as HWREG, MAP_SysTickPeriodSet, MAP_SysTickIntRegister, MAP_SysTickIntEnable, MAP_SysTickDisable with interrupts triggered when the countdown reaches zero.</p>
+    <p>Pin 8 serves as the designated GPIO pin for receiving input from the IR receiver. Interrupts are activated specifically on the falling signal edge using functions such as MAP_GPIOIntRegister, MAP_GPIOIntTypeSet, MAP_GPIOIntStatus, and MAP_GPIOIntClear. When triggered, the receiver GPIO ISR disables the SysTick timer and sets a flag indicating interrupt occurrence. The main function measures the disabled SysTick duration by recording tick counts and compares them against predefined thresholds. The "Decode" function interprets signals based on a delta buffer, initializing a variable "sum" to store the decoded value. If a value in the buffer exceeds 2000 microseconds, the least significant bit of "sum" is set to 1 using a bitwise OR operation, returning the decoded signal.</p>
+    <p>Upon capturing and storing 16 bits, the program verifies the sequence's validity by comparing it with predefined integer values representing unique 16-bit patterns for each remote control key, including 0-9, MUTE, and LAST. These sequences consist of 8 address bits and 8 data bits. If a match is found, the application transmits the data to the UART0 terminal; otherwise, the key is deemed invalid, and no output is generated.</p>
+  </div>
+</div>
+
+<h3 id="oled-display">OLED Display</h3>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
+  <div style='display: inline-block; vertical-align: top;flex:1 0 400px'>
+    <p>Incorporating OLED Display functionality from Lab 2, we integrated files provided in the Canvas lab sections into our project. To emulate the Arduino example found in the test.ino file, we introduced the WriteData() and WriteCommand() functions. These additions enable us to utilize higher-level OLED library functions present in the Adafruit_OLED.c and test.c files.</p>
+  </div>
+</div>
+
+<h3 id="stepper-motor">Stepper Motor</h3>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
+  <div style='display: inline-block; vertical-align: top;flex:1 0 400px'>
+    <p>The stepper motor, connected to an Arduino Uno R3, is programmed to perform specific actions. It's set to undergo 2048 steps per revolution and operates at a speed level of 3. Additionally, it's configured to execute 2 full revolutions. The motor's direction is determined by a variable reflecting the door's state.</p>
+    <p>When the door is in the "closed" state and receives a trigger signal, the motor turns counterclockwise, effectively pulling the door up to open it. Conversely, when the door is in the "opened" state and receives a trigger signal, the motor rotates clockwise to close the door.</p>
+  </div>
+</div>
+
+<h3 id="AWS-and-RESTful-API">AWS and RESTful API</h3>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
+  <div style='display: inline-block; vertical-align: top;flex:1 0 400px'>
+    <p>The AWS deployment is established to receive data from our system and dispatch messages to user/ homeowner’s phones. We initiated this process by setting up a device thing/shadow named "jade_cc3200_board" in AWS IoT, configuring it as a classic shadow, and acquiring the Restful API endpoint address. Subsequently, necessary certificates and keys were generated, and an access policy was created for our shadow, associating it with our thing and attaching this policy to the certificate. Converting certificate and private key files from .pem to .der format using OpenSSL followed suit. Additionally, a new standard topic was initiated in Simple Notification Service (SNS), with subscription via email confirmed and functionality tested by message publishing. Finally, a rule in AWS IoT was established to monitor specific topic updates, report on desired state attributes, and forward messages to the SNS topic, with the rule enabled post-configuration. To facilitate communication with AWS IoT from the board, we utilized provided example code from canvas and tailored the given example (lab4-blank.zip) to post state to AWS and obtain status information on our AWS thing. Modifications included adjusting Common.h for easy debugging and stable connection, replacing the internet connection reference with our phone’s hotspot details, and modifying main.c to update time variables to reflect the current time and redefine all lines labeled "CHANGE ME".</p>
+  </div>
+</div>
+
+<h2 id="hardware-implementation">Hardware Implementation</h2>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
+  <div style='display: inline-block; vertical-align: top;flex:1 0 400px'>
+<img src="./media/Picture3.png" style="width:100%;height:auto"/>
+  </div>
+</div>
+
+<h1 id="challenges">Challenges and Solution</h1>
+<p>The most significant challenges we faced were due to the Ultrasonic Sensor and sending signals between CC3200 and Arduino Uno</p>
+<h2 id="ultrasonic-sensor">Ultrasonic Sensor</h2>
+  <p>Initially, we incorporated an ultrasonic sensor into our project to detect people entering or exiting. We activated the sensor by sending a pulse to trigger it and then captured the echo response. To measure the duration of the echo pulse, we utilized the systick timer. Unfortunately, our measurement function didn't perform as accurately as expected. Due to time constraints, we had to shelve this feature for future improvement.</p>
+<h2 id="sending-signals-between-CC3200-and-Arduino-Uno">Sending Signals between CC3200 and Arduino Uno</h2>
+  <p>For communication between the two boards, we initially attempted to use two specific pins on the CC3200. However, these pins didn't behave as anticipated. After numerous attempts, we discovered that only certain pins met our requirements, and the ones initially chosen didn't work. Eventually, we settled on using pins 15 and 60 on the Launchpad for sending and receiving signals.</p>
+<h1 id="future-work">Future Work</h1>
+  <p>Given more time, we would work on adding several new functions to enhance our system. We aim to implement a feature that detects whether a person is entering or exiting and sends this information to AWS. Additionally, we would incorporate a 'STOP' button to halt the door in emergency situations and an automatic stop mechanism to prevent the door from closing if an object is detected in its path.</p>
+<h1 id="finalized-bom">Finalized BOM</h1>
+<!-- you can convert google sheet cells to html for free using a converter
+  like https://tabletomarkdown.com/convert-spreadsheet-to-html/ -->
+
+<table style="border-collapse:collapse;">
+<thead>
+  <tr>
+    <th><p>No.</p></th>
+    <th><p>PART NAME</p></th>
+    <th><p>DESCRIPTION</p></th>
+    <th><p>Qty</p></th>
+    <th><p>SUPPLIER / MANUFACTURER</p></th>
+    <th><p>UNIT COST</p></th>
+    <th><p>TOTAL PART COST</p></th>
+    <th><p>Purpose</p></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><p>1</p></td>
+    <td><p>CC3200-LAUNCHXL</p></td>
+    <td><p>Controller for everything</p></td>
+    <td><p>1</p></td>
+    <td><p>Provided by EEC172 Course</p></td>
+    <td><p>$55.00</p></td>
+    <td><p>$55.00</p></td>
+    <td><p>Main microcontroller to control connected devices and post data to AWS</p></td>
+  </tr>
+  <tr>
+    <td><p>2</p></td>
+    <td><p>Adafruit OLED Breakout Board-16-bit Color 1.5</p></td>
+    <td><p>128x128 RGB OLED Display. SPI protocol</p></td>
+    <td><p>1</p></td>
+    <td><p>Provided by EEC172 Course</p></td>
+    <td><p>$39.95</p></td>
+    <td><p>$39.95</p></td>
+    <td><p>Display Welcome message and door status</p></td>
+  </tr>
+  <tr>
+    <td><p>3</p></td>
+    <td><p>Arduino Uno R3</p></td>
+    <td><p>Microcontroller board ideal for prototyping</p></td>
+    <td><p>1</p></td>
+    <td><p>Amazon</p></td>
+    <td><p>$14.95</p></td>
+    <td><p>$14.95</p></td>
+    <td><p>Control stepper motor </p></td>
+  </tr>
+  <tr>
+    <td><p>4</p></td>
+    <td><p>Adafruit Premium Female/Male Extension Jumper Wires</p></td>
+    <td><p>150mm wires for connecting everything</p></td>
+    <td><p>1</p></td>
+    <td><p>Provided by EEC172 Course</p></td>
+    <td><p>$3.95</p></td>
+    <td><p>$3.95</p></td>
+    <td><p>For connecting the CC3200 to the Breadboard</p></td>
+  </tr>
+  <tr>
+    <td><p>5</p></td>
+    <td><p>AT&T S10-S3 Remote</p></td>
+    <td><p>General-purpose TV remote. IR NTC protocol</p></td>
+    <td><p>1</p></td>
+    <td><p>Provided by EEC172 Course</p></td>
+    <td><p>$9.99</p></td>
+    <td><p>$9.99</p></td>
+    <td><p>IR Remote control-send commands to the system, allowing the user to open or close the garage door</p></td>
+  </tr>
+  <tr>
+    <td><p>6</p></td>
+    <td><p>Vishay TSOP31130 IR RCVR</p></td>
+    <td><p>30kHz carrier frequency</p></td>
+    <td><p>1</p></td>
+    <td><p>Provided by EEC172 Course</p></td>
+    <td><p>$1.41</p></td>
+    <td><p>$1.41</p></td>
+    <td><p>Decode user inputs</p></td>
+  </tr>
+  <tr>
+    <td><p>7</p></td>
+    <td><p>100 ohm Resistor</p></td>
+    <td><p>100 ohm , 5% tolerance</p></td>
+    <td><p>1</p></td>
+    <td><p>Provided by EEC172 Course</p></td>
+    <td><p>$0.57</p></td>
+    <td><p>$0.57</p></td>
+    <td><p>Used for IR receiver circuit</p></td>
+  </tr>
+  <tr>
+    <td><p>8</p></td>
+    <td><p>100uF Capacitor</p></td>
+    <td><p>Electrolytic Capacitor</p></td>
+    <td><p>1</p></td>
+    <td><p>Provided by EEC172 Course</p></td>
+    <td><p>$0.11</p></td>
+    <td><p>$0.11</p></td>
+    <td><p>DC Filtering for IR Receiver</p></td>
+  </tr>
+  <tr>
+    <td><p>9</p></td>
+    <td><p>5V Stepper Motor and Driver</p></td>
+    <td><p>Precise position and control motor movements</p></td>
+    <td><p>1</p></td>
+    <td><p>Amazon</p></td>
+    <td><p>$3.99</p></td>
+    <td><p>$3.99</p></td>
+    <td><p>Control the movement of the garage door, ensuring smooth and reliable operation</p></td>
+  </tr>
+  <tr>
+    <td><p>10</p></td>
+    <td><p>Timing Belt</p></td>
+    <td><p>Door mechanism</p></td>
+    <td><p>1</p></td>
+    <td><p>Amazon</p></td>
+    <td><p>$10.99</p></td>
+    <td><p>$10.99</p></td>
+    <td><p>Pulls door up and down</p></td>
+  </tr>
+  <tr>
+    <td><p>11</p></td>
+    <td><p>3D Printer Filament </p></td>
+    <td><p>System frame</p></td>
+    <td><p>1</p></td>
+    <td><p>Amazon</p></td>
+    <td><p>$1.99</p></td>
+    <td><p>$1.99</p></td>
+    <td><p>Door frame</p></td>
+  </tr>
+    <td colspan="3">
+      <p>TOTAL PARTS</p></td>
+    <td><p>11</p></td>
+    <td colspan="2">
+      <p>TOTAL</p></td>
+    <td><p>$142.9</p></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <p>TOTAL PARTS (Excluding Provided)</p></td>
+    <td><p>4</p></td>
+    <td colspan="2">
+      <p>TOTAL (Exluding Provided)</p></td>
+    <td><p>$31.92</p></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+</article>
+</html>
