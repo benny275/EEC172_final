@@ -28,12 +28,17 @@ and door status updates. Integrated with AWS, it sends real-time notifications t
 <br/><br/> Our source code can be
 found <!-- replace this link -->
 <a href="https://github.com/benny275/EEC172_final">here</a> in a separate github repository
-<h2>Video Demo</h2> 
+<h2>Video Demo</h2>
 <p>Our project video demo showcases the seamless functionality of our garage door automation system. Upon pressing a button, the garage door smoothly pulls down, signaling its closure, while simultaneously displaying a message on the OLED screen to indicate that the door is closed. Another button press initiates the door's upward movement, effortlessly opening it. Furthermore, our system sends a signal to AWS upon completion of each action, ensuring real-time updates. Subsequently, users receive notifications on their phones, providing them with the current state of the door for enhanced convenience and peace of mind.</p>
 <center>
-<h3>Video Demonstration</h3><div style="text-align:center;margin:auto;max-width:560px"> <div style="padding-bottom:56.25%;position:relative;height:0;"> <iframe style="left:0;top:0;width:100%;height:100%;position:absolute;" width="560" height="315" src="https://www.youtube.com/shorts/p3GmpfW813Q" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> </div> </div> 
-</center> 
+<h3>Video Demonstration</h3>
+<div style="text-align:center;margin:auto;max-width:560px">
+  <div style="padding-bottom:56.25%;position:relative;height:0;">
+    <iframe style="left:0;top:0;width:100%;height:100%;position:absolute;" width="560" height="315" src="https://www.youtube.com/embed/p3GmpfW813Q" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
 </div>
+</center>
+
 </header>
 <nav id="TOC" role="doc-toc">
 <h2 id="toc-title">Table of Contents</h2>
@@ -97,8 +102,6 @@ BOM</a></li>
   </div>
 </div>
 
-<br/><br/>
-
 <h2 id="system-architecture">System Architecture</h2>
 <div style="display:flex;flex-wrap:wrap;justify-content:space-evenly;">
   <div style="display:inline-block;vertical-align:top;flex:1 0 300px;">
@@ -160,10 +163,18 @@ BOM</a></li>
 <h1 id="challenges">Challenges and Solution</h1>
 <p>The most significant challenges we faced were due to the Ultrasonic Sensor and sending signals between CC3200 and Arduino Uno</p>
 <h2 id="ultrasonic-sensor">Ultrasonic Sensor</h2>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
+  <div style='display: inline-block; vertical-align: top;flex:1 0 400px'>
   <p>Initially, we incorporated an ultrasonic sensor into our project to detect people entering or exiting. We activated the sensor by sending a pulse to trigger it and then captured the echo response. To measure the duration of the echo pulse, we utilized the systick timer. Unfortunately, our measurement function didn't perform as accurately as expected. Due to time constraints, we had to shelve this feature for future improvement.</p>
-<h2 id="sending-signals-between-CC3200-and-Arduino-Uno">Sending Signals between CC3200 and Arduino Uno</h2>
+  <div>
+</div>
+  <h2 id="sending-signals-between-CC3200-and-Arduino-Uno">Sending Signals between CC3200 and Arduino Uno</h2>
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
+  <div style='display: inline-block; vertical-align: top;flex:1 0 400px'>
   <p>For communication between the two boards, we initially attempted to use two specific pins on the CC3200. However, these pins didn't behave as anticipated. After numerous attempts, we discovered that only certain pins met our requirements, and the ones initially chosen didn't work. Eventually, we settled on using pins 15 and 60 on the Launchpad for sending and receiving signals.</p>
-<h1 id="future-work">Future Work</h1>
+  <div>
+</div>
+  <h1 id="future-work">Future Work</h1>
   <p>Given more time, we would work on adding several new functions to enhance our system. We aim to implement a feature that detects whether a person is entering or exiting and sends this information to AWS. Additionally, we would incorporate a 'STOP' button to halt the door in emergency situations and an automatic stop mechanism to prevent the door from closing if an object is detected in its path.</p>
 <h1 id="finalized-bom">Finalized BOM</h1>
 <!-- you can convert google sheet cells to html for free using a converter
